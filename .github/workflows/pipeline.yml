@@ -7,6 +7,9 @@ jobs:
   release-pipeline:
     name: Release Pipeline
     runs-on: windows-latest
+    env:
+      CERT_NAME: cert.pfx
+
     steps:
       - uses: actions/checkout@v4
 
@@ -23,9 +26,22 @@ jobs:
           mkdir DevOpsDaysTasks/Templates/
           cp .\workshop_material\default-tasks.xml .\DevOpsDaysTasks\Templates\
 
+      - name: Create Cert
+        run: |
+          $base64 = "${{ secrets.SIGN_PFX_PRIVATE_KEY }}"
+          $content = [System.Convert]::FromBase64String($base64)
+          Set-Content ${{ env.CERT_NAME }} -Value $content -AsByteStream
+
       - name: sign
         run: |
-          .\scripts\sign.ps1 .\DevOpsDaysTasks\DevOpsDaysTasks.UI.exe -PfxFile .\workshop_material\devopsdays_tasks_codesign.pfx -PfxPassword Password
+          .\scripts\sign.ps1 .\DevOpsDaysTasks\DevOpsDaysTasks.UI.exe -PfxFile ${{ env.CERT_NAME }} -PfxPassword Password
+
+      - name: Collect Files
+        uses: actions/checkout@v4
+        with:
+          repository: valentinklammerkrizaj/DevOpsDaysFileStorage
+          path: ExternalFiles
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
