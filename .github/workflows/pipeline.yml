@@ -2,6 +2,12 @@ name: Release Pipeline
 
 on:
   push: {}
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Name of the version
+        required: true
+        type: string
 
 jobs:
   release-pipeline:
@@ -21,8 +27,10 @@ jobs:
         run: dotnet test .\src\DevOpsDaysTasks.Core.Tests
 
       - name: build project
+        env:
+          VERSION: ${{ inputs.version || '0.0.0' }}
         run: |
-          dotnet publish -c Release src/DevOpsDaysTasks.UI -o DevOpsDaysTasks /p:Version=1.0.0 /p:VersionName=Bobcat
+          dotnet publish -c Release src/DevOpsDaysTasks.UI -o DevOpsDaysTasks /p:Version=${{ env.VERSION }} /p:VersionName=Bobcat
           mkdir DevOpsDaysTasks/Templates/
           cp .\workshop_material\default-tasks.xml .\DevOpsDaysTasks\Templates\
 
