@@ -9,8 +9,25 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup dotnet tools
         uses: actions/setup-dotnet@v4
         with: { dotnet-version: '8.0.x' }
+
       - name: Run Core Tests
         run: dotnet test .\src\DevOpsDaysTasks.Core.Tests
+
+      - name: build project
+        run: |
+          dotnet publish -c Release src/DevOpsDaysTasks.UI -o DevOpsDaysTasks /p:Version=1.0.0 /p:VersionName=Bobcat
+          mkdir DevOpsDaysTasks/Templates/
+          cp .\workshop_material\default-tasks.xml .\DevOpsDaysTasks\Templates\
+
+      - name: sign
+        run: |
+          .\scripts\sign.ps1 .\DevOpsDaysTasks\DevOpsDaysTasks.UI.exe -PfxFile .\workshop_material\devopsdays_tasks_codesign.pfx -PfxPassword Password
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: DevOpsDaysTasks
+          path: DevOpsDaysTasks
