@@ -8,5 +8,9 @@ jobs:
     name: Release Pipeline
     runs-on: windows-latest
     steps:
-      - name: hello Pipeline
-        run: echo "Hello World"
+      - uses: actions/checkout@v4
+      - name: Setup dotnet tools
+        uses: actions/setup-dotnet@v4
+        with: { dotnet-version: '8.0.x' }
+      - name: Run Core Tests
+        run: dotnet test .\src\DevOpsDaysTasks.Core.Tests
