@@ -25,7 +25,7 @@ public partial class MainWindow : Window
         Title = $"DevOpsDaysTasks - {GetVersionName()} - {GetVersion()}";
         Grid.ItemsSource = _items;
 
-        _repo = RepositoryFactory.Create(DbKind.SqlServer);
+        _repo = RepositoryFactory.Create(DbKind.Sqlite);
         // If no local DB is installed we can fallback to Sqlite
         // _repo = RepositoryFactory.Create(DbKind.Sqlite);
 

@@ -10,9 +10,9 @@ public class MssqlFixture : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        var dbKind = DbKind.SqlServer;
+        //var dbKind = DbKind.SqlServer;
         // If no local DB is installed we can fallback to Sqlite
-        // var dbKind = DbKind.Sqlite;
+        var dbKind = DbKind.Sqlite;
 
         if (dbKind == DbKind.SqlServer)
         {

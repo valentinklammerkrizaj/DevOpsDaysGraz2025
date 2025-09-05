@@ -1,0 +1,12 @@
+name: Release Pipeline
+
+on:
+  push: {}
+
+jobs:
+  release-pipeline:
+    name: Release Pipeline
+    runs-on: windows-latest
+    steps:
+      - name: hello Pipeline
+        run: echo "Hello World"
